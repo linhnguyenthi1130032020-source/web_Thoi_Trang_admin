@@ -1,0 +1,133 @@
+﻿@model web_Thoi_Trang_admin.Models.ProductEditViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+<h2>Quản Lý Sản phẩm </h2>
+
+@using (Html.BeginForm("Create", "SanPhams", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>Thông tin Sản phẩm </h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <!-- Tên sản phẩm -->
+    <div class="form-group">
+        @Html.LabelFor(model => model.TenSanPham, "Tên sản phẩm", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TenSanPham, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập tên sản phẩm..." } })
+            @Html.ValidationMessageFor(model => model.TenSanPham, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <!-- Mô tả -->
+    <div class="form-group">
+        @Html.LabelFor(model => model.MoTa, "Mô tả sản phẩm", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.MoTa, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập mô tả chi tiết..." } })
+            @Html.ValidationMessageFor(model => model.MoTa, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <!-- Tải file ảnh đại diện -->
+    <div class="form-group">
+        @Html.LabelFor(model => model.HinhAnhDaiDien, "Hình ảnh đại diện (File)", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <input type="file" name="HinhAnhDaiDien" style="border: none; padding: 5px 0; background: transparent;" />
+            @Html.ValidationMessageFor(model => model.HinhAnhDaiDien, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <script>
+    function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var fileName = input.files[0].name;
+                // Hiển thị tên file thay thế
+                document.getElementById('fileNameDisplayinnerText') || (document.getElementById('fileNameDisplay').innerText = "📎 Đã chọn: " + fileName);
+            }
+        }</script>
+
+    <!-- Danh mục -->
+    <div class="form-group">
+        @Html.LabelFor(model => model.MaDanhMuc, "Danh mục", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("MaDanhMuc", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.MaDanhMuc, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <!-- Trạng thái -->
+    <div class="form-group">
+        @Html.LabelFor(model => model.TrangThai, "Trạng thái", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.TrangThai)
+                @Html.ValidationMessageFor(model => model.TrangThai, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <!-- Mã SKU của biến thể -->
+    <div class="form-group">
+        <label class="control-label col-md-2">Mã SKU</label>
+        <div class="col-md-10">
+            <input type="text" name="BienThes[0].MaSKU" class="form-control" placeholder="Ví dụ: SKU-SP01-S-DEN" required />
+        </div>
+    </div>
+
+    <!-- Kích cỡ (Size) -->
+    <div class="form-group">
+        <label class="control-label col-md-2">Kích cỡ (Size)</label>
+        <div class="col-md-10">
+            <input type="text" name="BienThes[0].KichCo" class="form-control" placeholder="Ví dụ: S, M, L, XL" required />
+        </div>
+    </div>
+
+    <!-- Màu sắc -->
+    <div class="form-group">
+        <label class="control-label col-md-2">Màu sắc</label>
+        <div class="col-md-10">
+            <input type="text" name="BienThes[0].MauSac" class="form-control" placeholder="Ví dụ: Đen, Trắng..." required />
+        </div>
+    </div>
+
+    <!-- Giá bán -->
+    <div class="form-group">
+        <label class="control-label col-md-2">Giá bán</label>
+        <div class="col-md-10">
+            <input type="number" name="BienThes[0].GiaBan" class="form-control" placeholder="Ví dụ: 250000" min="0" step="1000" required />
+        </div>
+    </div>
+
+    <!-- Số lượng tồn kho -->
+    <div class="form-group">
+        <label class="control-label col-md-2">Số lượng tồn kho</label>
+        <div class="col-md-10">
+            <input type="number" name="BienThes[0].SoLuongTon" class="form-control" placeholder="Ví dụ: 50" min="0" required />
+        </div>
+    </div>
+    <!-- Trạng thái -->
+    <div class="form-group">
+        @Html.LabelFor(model => model.TrangThai, "Trạng thái", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.TrangThai)
+                @Html.ValidationMessageFor(model => model.TrangThai, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <!-- Nút Submit -->
+    <div class="form-group" style="margin-top: 20px;">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" style="padding: 6px 20px; font-weight: bold;" />
+        </div>
+    </div>
+</div>
+}
+
+<div style="margin-top: 15px;">
+    @Html.ActionLink("Back to List", "Index")
+</div>

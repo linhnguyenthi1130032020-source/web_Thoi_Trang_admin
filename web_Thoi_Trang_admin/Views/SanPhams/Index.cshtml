@@ -1,0 +1,125 @@
+﻿@model IEnumerable<web_Thoi_Trang_admin.Models.SanPham>
+
+@{
+    ViewBag.Title = "Quản lý danh sách sản phẩm";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+<div class="container" style="margin-top: 20px;">
+    <h2>Quản lý danh sách sản phẩm</h2>
+
+    <p style="margin: 15px 0;">
+        @Html.ActionLink("+ Thêm sản phẩm mới", "Create", null, new { @class = "btn btn-primary", style = "font-weight: 500;" })
+    </p>
+
+    <!-- Hiển thị thông báo thành công nếu có -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success" style="border-radius: 4px;">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div class="panel panel-default" style="box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 6px;">
+        <div class="panel-body">
+            <table class="table table-hover table-striped" style="vertical-align: middle;">
+                <thead>
+                    <tr style="background-color: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+                        <th style="width: 90px; text-align: center;">Hình ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Danh mục</th>
+                        <th>Giá bán</th>
+                        <th style="text-align: center;">Tồn kho</th>
+                        <th>Size (Kích cỡ)</th>
+                        <th style="text-align: center;">Ngày tạo</th>
+                        <th style="text-align: center;">Trạng thái</th>
+                        <th style="text-align: center; width: 180px;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        // Tính toán lấy giá, tổng tồn và các size từ bảng biến thể liên quan
+                        var firstVariant = item.BienTheSanPham != null ? item.BienTheSanPham.FirstOrDefault() : null;
+                        var minPrice = item.BienTheSanPham != null && item.BienTheSanPham.Count > 0 ? item.BienTheSanPham.Min(b => b.GiaBan) : 0;
+                        var totalStock = item.BienTheSanPham != null ? item.BienTheSanPham.Sum(b => b.SoLuongTon) : 0;
+                        var sizes = item.BienTheSanPham != null ? string.Join(", ", item.BienTheSanPham.Select(b => b.KichCo).Distinct()) : "";
+
+                        <tr>
+                            <!-- Hình ảnh đại diện -->
+                            <td style="text-align: center; vertical-align: middle;">
+                                @if (!string.IsNullOrEmpty(item.HinhAnhDaiDien))
+                                {
+                                    <img src="~/Content/images/products/@item.HinhAnhDaiDien" alt="@item.TenSanPham" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;" />
+                                }
+                                else
+                                {
+                                    <img src="~/Content/images/default.png" alt="No Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;" />
+                                }
+                            </td>
+
+                            <!-- Tên sản phẩm & Mô tả ngắn -->
+                            <td style="vertical-align: middle;">
+                                <strong style="color: #1e293b; font-size: 13px;">@item.TenSanPham</strong>
+                                @if (!string.IsNullOrEmpty(item.MoTa))
+                                {
+                                    <div style="font-size: 11px; color: #64748b; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                        @item.MoTa
+                                    </div>
+                                }
+                            </td>
+
+                            <!-- Danh mục -->
+                            <td style="vertical-align: middle;">
+                                <span class="label label-info" style="font-size: 11px;">
+                                    @(item.DanhMuc != null ? item.DanhMuc.TenDanhMuc : "Chưa phân loại")
+                                </span>
+                            </td>
+
+                            <!-- Giá bán -->
+                            <td style="vertical-align: middle; color: #d9534f; font-weight: bold;">
+                                @string.Format("{0:N0} đ", minPrice)
+                            </td>
+
+                            <!-- Tồn kho -->
+                            <td style="text-align: center; vertical-align: middle;">
+                                <span class="badge" style="background-color: #337ab7;">@totalStock</span>
+                            </td>
+
+                            <!-- Size -->
+                            <td style="vertical-align: middle;">
+                                <span style="font-size: 12px; color: #334155; font-weight: 500;">@sizes</span>
+                            </td>
+
+                            <!-- Ngày tạo -->
+                            <td style="text-align: center; vertical-align: middle; font-size: 12px; color: #64748b;">
+                                @item.NgayTao.ToString("dd/MM/yyyy HH:mm")
+                            </td>
+
+                            <!-- Trạng thái -->
+                            <td style="text-align: center; vertical-align: middle;">
+                                @if (item.TrangThai)
+                                {
+                                    <span class="label label-success" style="font-size: 10px;">Đang bán</span>
+                                }
+                                else
+                                {
+                                    <span class="label label-default" style="font-size: 10px;">Ngừng bán</span>
+                                }
+                            </td>
+
+                            <!-- Thao tác -->
+                            <td style="text-align: center; vertical-align: middle;">
+                                <div class="btn-group" role="group">
+                                    @Html.ActionLink("Sửa", "Edit", new { id = item.MaSanPham }, new { @class = "btn btn-xs btn-warning", style = "margin-right: 2px;" })
+                                    @Html.ActionLink("Chi tiết", "Details", new { id = item.MaSanPham }, new { @class = "btn btn-xs btn-info", style = "margin-right: 2px;" })
+                                    @Html.ActionLink("Xóa", "Delete", new { id = item.MaSanPham }, new { @class = "btn btn-xs btn-danger" })
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

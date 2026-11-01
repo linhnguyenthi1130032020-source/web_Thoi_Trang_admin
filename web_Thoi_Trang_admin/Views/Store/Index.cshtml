@@ -1,0 +1,146 @@
+﻿@{
+    ViewBag.Title = "Cửa hàng - NOVEASTORE";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
+<link href="@Url.Content("~/Content/Store.css")" rel="stylesheet" />
+
+<div class="novea-voucher-slider" id="voucherSlider">
+    <button class="slider-btn prev" id="prevSlide">&#10094;</button>
+    <button class="slider-btn next" id="nextSlide">&#10095;</button>
+
+    <div class="novea-slider-track" id="sliderTrack">
+        <div class="novea-slide">
+            <img src="@Url.Content("~/Content/images/face/Banner miễn phí giao hàng Novea.png")" alt="Miễn phí giao hàng" />
+        </div>
+        <div class="novea-slide">
+            <img src="@Url.Content("~/Content/images/face/Voucher10.png")" alt="Voucher 10%" />
+        </div>
+        <div class="novea-slide">
+            <img src="@Url.Content("~/Content/images/face/Voucher15.png")" alt="Voucher 15%" />
+        </div>
+        <div class="novea-slide">
+            <img src="@Url.Content("~/Content/images/face/Voucher20.png")" alt="Voucher 20%" />
+        </div>
+        <div class="novea-slide">
+            <img src="@Url.Content("~/Content/images/face/Voucher30.png")" alt="Voucher 30%" />
+        </div>
+        <div class="novea-slide">
+            <img src="@Url.Content("~/Content/images/face/Voucher40.png")" alt="Voucher 40%" />
+        </div>
+        <div class="novea-slide">
+            <img src="@Url.Content("~/Content/images/face/Voucher50.png")" alt="Voucher 50%" />
+        </div>
+    </div>
+</div>
+
+<!-- 2. Nội dung trang Store & Thông tin cửa hàng -->
+<div class="novea-hero-banner" style="background-image: url('@Url.Content("~/Content/images/face/face1.jpg")');">
+    <video autoplay loop muted playsinline class="hero-video-bg" id="heroVideo">
+        <source src="@Url.Content("~/Content/images/face/web_Thoi_Trang.mp4")" type="video/mp4" />
+    </video>
+
+    <div class="novea-hero-top">
+        <h2>Lựa chọn tinh tế cho phong cách hiện đại.</h2>
+    </div>
+
+    <div class="novea-hero-bottom">
+        <p class="novea-hero-slogan">Luôn mang đến trải nghiệm tuyệt vời nhất cho bạn</p>
+        <!-- Nút Xem chi tiết liên kết sang trang Đăng nhập -->
+        <a href="@Url.Action("Login", "Account")" class="btn-novea-explore">
+            Xem chi tiết <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+</div>
+
+    <!-- 3. Thông tin cửa hàng (Thẳng hàng lề trái với Banner và Slider) -->
+    <div class="store-info-plain">
+        <address>
+            <strong>Cửa hàng thời trang NOVEA</strong><br>
+            123 Đường Lê Lợi, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh<br>
+            <strong>Phone:</strong> <a href="tel:0912345678">0912.345.678</a>
+        </address>
+        <address class="mb-0">
+            <strong>Support:</strong> <a href="mailto:Support@example.com">Support@example.com</a><br>
+            <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
+        </address>
+    </div>
+</div>
+
+<!-- Script xử lý Slider và Video Hover -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const track = document.getElementById("sliderTrack");
+        const slides = document.querySelectorAll(".novea-slide");
+        const prevBtn = document.getElementById("prevSlide");
+        const nextBtn = document.getElementById("nextSlide");
+        const sliderContainer = document.getElementById("voucherSlider");
+
+        if (track && slides.length > 0) {
+            let currentIndex = 0;
+            const totalSlides = slides.length;
+            let autoSlideTimer;
+
+            function updateSlider(index) {
+                track.style.transform = `translateX(-${index * 100}%)`;
+                currentIndex = index;
+            }
+
+            function nextSlide() {
+                let nextIndex = (currentIndex + 1) % totalSlides;
+                updateSlider(nextIndex);
+            }
+
+            function prevSlide() {
+                let prevIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                updateSlider(prevIndex);
+            }
+
+            function startAutoSlide() {
+                autoSlideTimer = setInterval(nextSlide, 3500);
+            }
+
+            function stopAutoSlide() {
+                clearInterval(autoSlideTimer);
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener("click", function () {
+                    nextSlide();
+                    stopAutoSlide();
+                    startAutoSlide();
+                });
+            }
+
+            if (prevBtn) {
+                prevBtn.addEventListener("click", function () {
+                    prevSlide();
+                    stopAutoSlide();
+                    startAutoSlide();
+                });
+            }
+
+            if (sliderContainer) {
+                sliderContainer.addEventListener("mouseenter", stopAutoSlide);
+                sliderContainer.addEventListener("mouseleave", startAutoSlide);
+            }
+
+            startAutoSlide();
+        }
+
+        // Xử lý hiệu ứng video khi hover vào banner face
+        const banner = document.querySelector(".novea-hero-banner");
+        const video = document.getElementById("heroVideo");
+
+        if (banner && video) {
+            banner.addEventListener("mouseenter", function () {
+                video.currentTime = 0;
+                video.play().catch(error => console.log("Video play error:", error));
+            });
+
+            banner.addEventListener("mouseleave", function () {
+                video.pause();
+            });
+        }
+    });
+</script>

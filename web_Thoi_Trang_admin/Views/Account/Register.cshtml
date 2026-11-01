@@ -1,0 +1,72 @@
+﻿
+
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
+<div class="auth-card" style="max-width: 500px; margin: 40px auto; background: #ffffff; border-radius: 16px; padding: 32px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); border: 1px solid #e2e8f0;">
+    <div style="text-align: center; margin-bottom: 24px;">
+        <h2 style="font-size: 26px; font-weight: 800; color: var(--ink); margin-bottom: 8px;">Đăng Ký Tài Khoản</h2>
+        <p style="color: var(--muted); font-size: 14px; margin: 0;">Trở thành thành viên của NOVEASTORE để nhận ưu đãi độc quyền</p>
+    </div>
+
+    @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        if (!ViewData.ModelState.IsValid)
+        {
+            <div style="background-color: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 14px;">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            </div>
+        }
+
+        <!-- Họ và tên -->
+        <div style="margin-bottom: 18px;">
+            <label for="fullname" style="display: block; font-weight: 600; color: #334155; margin-bottom: 6px; font-size: 14px;">Họ và tên</label>
+            <div style="position: relative;">
+                <input type="text" id="fullname" name="fullname" class="form-control-modern" placeholder="Nhập họ và tên của bạn" required style="padding-left: 42px !important;" />
+                <i class="bi bi-person-badge" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 18px;"></i>
+            </div>
+        </div>
+
+        <!-- Email / Tên đăng nhập -->
+        <div style="margin-bottom: 18px;">
+            <label for="email" style="display: block; font-weight: 600; color: #334155; margin-bottom: 6px; font-size: 14px;">Email / Tên đăng nhập</label>
+            <div style="position: relative;">
+                <input type="email" id="email" name="email" class="form-control-modern" placeholder="Nhập địa chỉ email của bạn" required style="padding-left: 42px !important;" />
+                <i class="bi bi-envelope" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 18px;"></i>
+            </div>
+        </div>
+
+        <!-- Mật khẩu -->
+        <div style="margin-bottom: 18px;">
+            <label for="password" style="display: block; font-weight: 600; color: #334155; margin-bottom: 6px; font-size: 14px;">Mật khẩu</label>
+            <div style="position: relative;">
+                <input type="password" id="password" name="password" class="form-control-modern" placeholder="Ít nhất 6 ký tự" required style="padding-left: 42px !important;" />
+                <i class="bi bi-lock" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 18px;"></i>
+            </div>
+        </div>
+
+        <!-- Xác nhận mật khẩu -->
+        <div style="margin-bottom: 24px;">
+            <label for="confirmPassword" style="display: block; font-weight: 600; color: #334155; margin-bottom: 6px; font-size: 14px;">Xác nhận mật khẩu</label>
+            <div style="position: relative;">
+                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control-modern" placeholder="Nhập lại mật khẩu" required style="padding-left: 42px !important;" />
+                <i class="bi bi-shield-lock" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 18px;"></i>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-brand" style="width: 100%; text-align: center; padding: 12px; font-size: 16px; border-radius: 10px; cursor: pointer;">
+            Đăng ký ngay
+        </button>
+    }
+
+    <div style="text-align: center; margin-top: 24px; border-top: 1px solid var(--line); padding-top: 18px; font-size: 14px; color: var(--muted);">
+        Đã có tài khoản?
+        <a href="@Url.Action("Login", "Account")" style="color: var(--brand); font-weight: 700; text-decoration: none;">Đăng nhập ngay</a>
+    </div>
+</div>
+
+

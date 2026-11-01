@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="2afec3c773394dccb7f8e830d4db9101" Name="Diagram1" ZoomLevel="26">
+        <EntityTypeShape EntityType="WebThoiTrangModel.BienTheSanPham" Width="1.5" PointX="6.875" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebThoiTrangModel.ChiTietDonHang" Width="1.5" PointX="5.625" PointY="10.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebThoiTrangModel.ChiTietGioHang" Width="1.5" PointX="10.5" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebThoiTrangModel.DanhMuc" Width="1.5" PointX="0.75" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebThoiTrangModel.DonHang" Width="1.5" PointX="10.5" PointY="10.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebThoiTrangModel.GioHang" Width="1.5" PointX="13.375" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebThoiTrangModel.HinhAnhSanPham" Width="1.5" PointX="2.625" PointY="10.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebThoiTrangModel.NguoiDung" Width="1.5" PointX="15.125" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebThoiTrangModel.SanPham" Width="1.5" PointX="3" PointY="5.875" IsExpanded="true" />
+        <AssociationConnector Association="WebThoiTrangModel.FK_BienTheSanPham_SanPham" ManuallyRouted="false" />
+        <AssociationConnector Association="WebThoiTrangModel.FK_ChiTietDonHang_BienThe" ManuallyRouted="false" />
+        <AssociationConnector Association="WebThoiTrangModel.FK_ChiTietGioHang_BienThe" ManuallyRouted="false" />
+        <AssociationConnector Association="WebThoiTrangModel.FK_ChiTietDonHang_DonHang" ManuallyRouted="false" />
+        <AssociationConnector Association="WebThoiTrangModel.FK_ChiTietGioHang_GioHang" ManuallyRouted="false" />
+        <AssociationConnector Association="WebThoiTrangModel.FK_SanPham_DanhMuc" ManuallyRouted="false" />
+        <AssociationConnector Association="WebThoiTrangModel.FK_DonHang_NguoiDung" ManuallyRouted="false" />
+        <AssociationConnector Association="WebThoiTrangModel.FK_GioHang_NguoiDung" ManuallyRouted="false" />
+        <AssociationConnector Association="WebThoiTrangModel.FK_HinhAnhSanPham_SanPham" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

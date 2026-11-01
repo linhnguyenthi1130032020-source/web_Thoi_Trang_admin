@@ -1,0 +1,122 @@
+﻿CREATE DATABASE WebThoiTrang;
+GO
+USE WebThoiTrang;
+GO
+CREATE TABLE DanhMuc (
+    MaDanhMuc INT IDENTITY(1,1),
+    TenDanhMuc NVARCHAR(100) NOT NULL,
+    MoTa NVARCHAR(500) NULL,
+    TrangThai BIT NOT NULL DEFAULT 1,
+    CONSTRAINT PK_DanhMuc PRIMARY KEY (MaDanhMuc)
+);
+GO
+CREATE TABLE SanPham (
+    MaSanPham INT IDENTITY(1,1),
+    TenSanPham NVARCHAR(250) NOT NULL,
+    MoTa NVARCHAR(MAX) NULL,
+    HinhAnhDaiDien NVARCHAR(500) NULL,
+    MaDanhMuc INT NOT NULL,
+    TrangThai BIT NOT NULL DEFAULT 1,
+    NgayTao DATETIME NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT PK_SanPham PRIMARY KEY (MaSanPham),
+    CONSTRAINT FK_SanPham_DanhMuc FOREIGN KEY (MaDanhMuc) REFERENCES DanhMuc(MaDanhMuc)
+);
+GO
+CREATE TABLE HinhAnhSanPham (
+    MaHinhAnh INT IDENTITY(1,1),
+    MaSanPham INT NOT NULL,
+    MauSac NVARCHAR(50) NULL,
+    DuongDanAnh NVARCHAR(500) NOT NULL,
+    ThuTu INT NOT NULL DEFAULT 1,
+    CONSTRAINT PK_HinhAnhSanPham PRIMARY KEY (MaHinhAnh),
+    CONSTRAINT FK_HinhAnhSanPham_SanPham FOREIGN KEY (MaSanPham) REFERENCES SanPham(MaSanPham) ON DELETE CASCADE
+);
+GO
+CREATE TABLE BienTheSanPham (
+    MaBienThe INT IDENTITY(1,1),
+    MaSanPham INT NOT NULL,
+    MaSKU VARCHAR(50) NOT NULL,
+    KichCo VARCHAR(20) NOT NULL,
+    MauSac NVARCHAR(50) NOT NULL,
+    GiaBan DECIMAL(18,2) NOT NULL,
+    SoLuongTon INT NOT NULL DEFAULT 0,
+    TrangThai BIT NOT NULL DEFAULT 1,
+    CONSTRAINT PK_BienTheSanPham PRIMARY KEY (MaBienThe),
+    CONSTRAINT FK_BienTheSanPham_SanPham FOREIGN KEY (MaSanPham) REFERENCES SanPham(MaSanPham) ON DELETE CASCADE,
+    CONSTRAINT UQ_BienThe_SKU UNIQUE (MaSKU),
+    CONSTRAINT UQ_BienThe_PhanLoai UNIQUE (MaSanPham, KichCo, MauSac),
+    CONSTRAINT CK_BienThe_Gia CHECK (GiaBan >= 0),
+    CONSTRAINT CK_BienThe_SoLuongTon CHECK (SoLuongTon >= 0)
+);
+GO
+CREATE TABLE NguoiDung (
+    MaNguoiDung INT IDENTITY(1,1),
+    TenDangNhap VARCHAR(50) NOT NULL UNIQUE,
+    MatKhau VARCHAR(255) NOT NULL,
+    HoVaTen NVARCHAR(100) NOT NULL,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    SoDienThoai VARCHAR(20) NULL,
+    DiaChi NVARCHAR(255) NULL,
+    VaiTro VARCHAR(20) NOT NULL DEFAULT 'KhachHang',
+    TrangThai BIT NOT NULL DEFAULT 1,
+    NgayTao DATETIME NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT PK_NguoiDung PRIMARY KEY (MaNguoiDung)
+);
+GO
+CREATE TABLE GioHang (
+    MaGioHang INT IDENTITY(1,1),
+    MaNguoiDung INT NOT NULL,
+    NgayTao DATETIME NOT NULL DEFAULT GETDATE(),
+    NgayCapNhat DATETIME NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT PK_GioHang PRIMARY KEY (MaGioHang),
+    CONSTRAINT FK_GioHang_NguoiDung FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung) ON DELETE CASCADE,
+    CONSTRAINT UQ_GioHang_NguoiDung UNIQUE (MaNguoiDung)
+);
+GO
+CREATE TABLE ChiTietGioHang (
+    MaChiTietGioHang INT IDENTITY(1,1),
+    MaGioHang INT NOT NULL,
+    MaBienThe INT NOT NULL,
+    SoLuong INT NOT NULL DEFAULT 1,
+    CONSTRAINT PK_ChiTietGioHang PRIMARY KEY (MaChiTietGioHang),
+    CONSTRAINT FK_ChiTietGioHang_GioHang FOREIGN KEY (MaGioHang) REFERENCES GioHang(MaGioHang) ON DELETE CASCADE,
+    CONSTRAINT FK_ChiTietGioHang_BienThe FOREIGN KEY (MaBienThe) REFERENCES BienTheSanPham(MaBienThe),
+    CONSTRAINT UQ_ChiTietGioHang UNIQUE (MaGioHang, MaBienThe),
+    CONSTRAINT CK_ChiTietGioHang_SoLuong CHECK (SoLuong > 0)
+);
+GO
+CREATE TABLE DonHang (
+    MaDonHang INT IDENTITY(1,1),
+    MaNguoiDung INT NULL,
+    TenNguoiNhan NVARCHAR(100) NOT NULL,
+    SoDienThoaiNhan VARCHAR(20) NOT NULL,
+    EmailNguoiNhan VARCHAR(100) NULL,
+    DiaChiGiaoHang NVARCHAR(255) NOT NULL,
+    TongTien DECIMAL(18,2) NOT NULL DEFAULT 0,
+    PhuongThucThanhToan NVARCHAR(50) NOT NULL DEFAULT N'COD',
+    TrangThaiThanhToan NVARCHAR(50) NOT NULL DEFAULT N'Chưa thanh toán',
+    GhiChu NVARCHAR(500) NULL,
+    NgayDatHang DATETIME NOT NULL DEFAULT GETDATE(),
+    TrangThaiDonHang NVARCHAR(50) NOT NULL DEFAULT N'Chờ xử lý',
+    CONSTRAINT PK_DonHang PRIMARY KEY (MaDonHang),
+    CONSTRAINT FK_DonHang_NguoiDung FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung) ON DELETE SET NULL,
+    CONSTRAINT CK_DonHang_TongTien CHECK (TongTien >= 0)
+);
+GO
+CREATE TABLE ChiTietDonHang (
+    MaChiTietDonHang INT IDENTITY(1,1),
+    MaDonHang INT NOT NULL,
+    MaBienThe INT NULL,
+    TenSanPham NVARCHAR(250) NOT NULL,
+    KichCo VARCHAR(20) NOT NULL,
+    MauSac NVARCHAR(50) NOT NULL,
+    SoLuong INT NOT NULL,
+    DonGia DECIMAL(18,2) NOT NULL,
+    ThanhTien AS (SoLuong * DonGia) PERSISTED,
+    CONSTRAINT PK_ChiTietDonHang PRIMARY KEY (MaChiTietDonHang),
+    CONSTRAINT FK_ChiTietDonHang_DonHang FOREIGN KEY (MaDonHang) REFERENCES DonHang(MaDonHang) ON DELETE CASCADE,
+    CONSTRAINT FK_ChiTietDonHang_BienThe FOREIGN KEY (MaBienThe) REFERENCES BienTheSanPham(MaBienThe) ON DELETE SET NULL,
+    CONSTRAINT CK_ChiTietDonHang_SoLuong CHECK (SoLuong > 0),
+    CONSTRAINT CK_ChiTietDonHang_DonGia CHECK (DonGia >= 0)
+);
+GO
